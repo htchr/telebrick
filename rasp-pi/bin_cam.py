@@ -6,7 +6,7 @@ import time
 
 project = 'test'
 path = '/home/tm/launch'
-url = 'http://10.0.0.185:8000/upload'
+url = 'http://10.0.0.185:8000/'
 
 def error(e):
     print('An error occurred:')
@@ -36,11 +36,20 @@ if __name__ == '__main__':
         with open(name, 'rb') as jpg:
             files = {'file': jpg}
             try:
-                response = requests.post(url, files=files)
+                response = requests.post(url + 'upload', files=files)
             except requests.exceptions.ConnectionError as e:
                 print('Could not connect to server')
             except Exception as e:
                 error(e)
+
+        status = requests.get(url + 'light')
+        light = status.json()['light']
+        if light:
+            # turn light on
+            print(light)
+        else:
+            # turn light off
+            print(light)
 
         os.remove(name)
         time.sleep(60)
