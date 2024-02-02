@@ -1,56 +1,51 @@
-from picamera2 import Picamera2
+import cv2
+import time
+import os
 from datetime import datetime
 import requests
-import os
-import time
 
-project = 'test'
-path = '/home/tm/launch'
-url = 'http://10.0.0.185:8000/'
+PROJ = "test"
+PATH = "/home/pi/telebrick/rasp-pi"
+URL = "http://10.0.0.185:80/"
 
-def error(e):
-    print('An error occurred:')
-    print(type(e))
-    print(e)
+def cap_img(name):
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Error opening webcam")
+        return False
+    ret, img = cap.read()
+    if not ret:
+        return False
+    cv2.imwrite(name, img)
+    cap.release()
+    return True
 
-if __name__ == '__main__':
-    for f in os.listdir(path):
-        if f.endswith('.jpg'):
-            fpath = os.path.join(path, f)
-            os.remove(fpath)
+def send_img(name):
+    with open(name, 'rb') as jpg:
+        files = {"file": jpg}
+        try:
+            response = requests.post(URL + "upload", files=files)
+        except Exception:
+            print("Error sending img")
+            return False
+    return True
+
+def is_full(url):
+    status = requests.get(url + "full")
+    return status.json()["full"]
+
+if __name__ == "__main__":
+    for f in os.listdir(PATH):
+        if f.endswith(".jpg"):
+            f_path = os.path.join(PATH, f)
+            os.remove(f_path)
 
     while True:
         rn = datetime.now()
-        name = rn.strftime('%Y%m%d%H%M') + project + '.jpg'
-
-        try:
-            cam = Picamera2()
-            config = cam.create_still_configuration()
-            cam.configure(config)
-            cam.start()
-            metadata = cam.capture_file(name)
-            cam.close()
-        except Exception as e:
-            error(e)
-
-        with open(name, 'rb') as jpg:
-            files = {'file': jpg}
-            try:
-                response = requests.post(url + 'upload', files=files)
-            except requests.exceptions.ConnectionError as e:
-                print('Could not connect to server')
-            except Exception as e:
-                error(e)
-
-        status = requests.get(url + 'light')
-        light = status.json()['light']
-        if light:
-            # turn light on
-            print(light)
-        else:
-            # turn light off
-            print(light)
-
-        os.remove(name)
-        time.sleep(60)
+        im_name = rn.strftime("%Y%m%d%H%M") + PROJ + ".jpg"
+        cap_img(im_name)
+        send_img(im_name)
+        os.remove(im_name)
+        print(is_full(URL))
+        time.sleep(5)
 
