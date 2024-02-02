@@ -1,4 +1,4 @@
-/tests/ground/*
+/tests/*
 /venv
 *.swp
 *.jpg
