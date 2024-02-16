@@ -3,7 +3,9 @@ import shutil
 from groundlight import Groundlight
 import cv2
 import cv2.aruco as aruco
-
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.staticfiles import StaticFiles
+import os
 
 app = FastAPI()
 
@@ -73,14 +75,38 @@ def full():
 def root():
     return {"Hello": "world"}
 
+
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Mount the directory containing the images to serve them statically
+app.mount("/images", StaticFiles(directory="images"), name="images")
+
+# Define the path to the directory containing the images
+IMAGES_DIR = "images"
+
 @app.get("/latest")
-def get_latest_info():
+async def serve():
     global LIGHT
     global FULL
-    #global PERCENT
+    # Sample data for 'full' and 'light' attributes
+    sample_data = {"light": LIGHT, "full": FULL}
 
-    return {
-        'light': LIGHT,
-        'full': FULL,
-        'image': "images/202401312126test.jpg" # this is to test if it returns an image, replace w/ the URL of latest image
-    }
+    #!!! substitute with name of most recent image!!!
+    image_filename = "test.png"
+    image_path = os.path.join(IMAGES_DIR, image_filename)
+
+    # Construct the full URL to the image
+    image_url = f"http://localhost:8000/images/{image_filename}"
+
+    # Construct the response object
+    response_data = {"light": sample_data["light"], "full": sample_data["full"], "image": image_url}
+
+    return response_data
