@@ -96,3 +96,14 @@ def per_full():
 def root():
     return {"Hello": "world"}
 
+@app.get("/latest")
+def get_latest_info():
+    global LIGHT
+    global FULL
+    #global PERCENT
+
+    return {
+        'light': LIGHT,
+        'full': FULL,
+        'image': "images/202401312126test.jpg" # this is to test if it returns an image, replace w/ the URL of latest image
+    }
