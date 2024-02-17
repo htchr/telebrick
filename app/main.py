@@ -3,12 +3,14 @@ import shutil
 from groundlight import Groundlight
 import cv2
 import cv2.aruco as aruco
+import numpy as np
 
 
 app = FastAPI()
 
 LIGHT = False
 FULL = False
+PER_FULL = -1
 
 def find_aruco(im_path):
     img = cv2.imread(im_path)
@@ -27,6 +29,20 @@ def find_aruco(im_path):
             return True
     return False
 
+def print_largest_aruco_id(image_path):
+    image = cv2.imread(image_path)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_250)
+    aruco_params = cv2.aruco.DetectorParameters_create()
+    corners, ids, rejectedImgPoints = cv2.aruco.detectMarkers(gray, aruco_dict, parameters=aruco_params)
+    if ids is not None:
+        ids = ids.flatten()
+        largest_id = np.max(ids)
+        # print(f"Largest Aruco ID: {largest_id}")
+        return int(largest_id)
+    else:
+        return -1
+
 """
 def find_aruco(im_path):
     img = cv2.imread(im_path)
@@ -43,6 +59,7 @@ def find_aruco(im_path):
 async def upload_img(file: UploadFile = File(...)):
     global LIGHT
     global FULL
+    global PER_FULL
     path = "images/"
     im_path = path + file.filename
     # save image from upload
@@ -50,6 +67,7 @@ async def upload_img(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
     # find aruco
     FULL = find_aruco(im_path)
+    PER_FULL = print_largest_aruco_id(im_path)
     """
     # analyze image
     gl = Groundlight()
@@ -68,6 +86,11 @@ def light():
 def full():
     global FULL
     return {'full': FULL}
+
+@app.get("/per_full")
+def per_full():
+    global PER_FULL
+    return {'per_full': PER_FULL}
 
 @app.get("/")
 def root():
