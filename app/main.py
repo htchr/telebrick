@@ -3,7 +3,9 @@ import shutil
 from groundlight import Groundlight
 import cv2
 import cv2.aruco as aruco
-
+import os
+from os import listdir
+from os.path import isfile, join
 
 app = FastAPI()
 
@@ -72,15 +74,44 @@ def full():
 @app.get("/")
 def root():
     return {"Hello": "world"}
+    
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Mount the directory containing the images to serve them statically
+app.mount("/images", StaticFiles(directory="images"), name="images")
+
+# Define the path to the directory containing the images
+IMAGES_DIR = "images"
 
 @app.get("/latest")
-def get_latest_info():
+async def serve():
     global LIGHT
     global FULL
-    #global PERCENT
+    # Sample data for 'full' and 'light' attributes
+    sample_data = {"light": LIGHT, "full": FULL}
 
-    return {
-        'light': LIGHT,
-        'full': FULL,
-        'image': "images/202401312126test.jpg" # this is to test if it returns an image, replace w/ the URL of latest image
-    }
+    # Get a list of all files in the directory
+    image_files = [f for f in listdir(IMAGES_DIR) if isfile(join(IMAGES_DIR, f))]
+    # Filter out non-image files if needed
+    image_files = [f for f in image_files if f.endswith(('.jpg', '.jpeg', '.png', '.gif'))]
+    
+    # Sort files by modification time
+    image_files.sort(key=lambda x: os.path.getmtime(os.path.join(IMAGES_DIR, x)), reverse=True)
+    # Get the latest image filename
+    latest_image_filename = image_files[0]
+
+    # Construct the full URL to the image
+    # This IP address will have to be changed if we host the server on a computer that isn't Eric's
+    image_url = f"http://10.18.190.240:8000/images/{latest_image_filename}" 
+
+    # Construct the response object
+    response_data = {"light": sample_data["light"], "full": sample_data["full"], "image": image_url}
+
+    return response_data
