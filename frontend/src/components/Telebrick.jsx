@@ -30,8 +30,8 @@ function Telebrick() {
   // State to store the latest available data
   const [data, setData] = useState(null);
 
-  // TODO: Replace with the correct server URL
-  const serverUrl = "http://localhost:8000";
+  // This IP address will only work with Eric's laptop
+  const serverUrl = "http://10.18.190.240:8000";
 
   /*
     The function inside useEffect will be called when the page first loads, and
