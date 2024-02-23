@@ -1,19 +1,17 @@
 # GIX / T-Mobile construction launch project
 
-copy the rasp-pi folder to the raspbery pi
-
-run with:
+## raspberry pi
 
 ```bash
 python bin_cam.py
 ```
 
-on the server:
+## server
 
 ```bash
-docker build -t telebrick .
+docker build --build-arg GRND_KEY='your_groundlight_api_key' -t tele-back .
 ```
 
 ```bash
-docker run --name telebrick -p 80:80 telebrick
+docker run --name tele-back -p 80:80 tele-back
 ```
