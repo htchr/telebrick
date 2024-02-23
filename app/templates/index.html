@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Image Update</title>
+    <title>Telebrick</title>
 </head>
 <body>
-    <img id="dynamicImage" src="" alt="Dynamic Image" style="max-width: 100%; height: auto;">
-    <div>Percentage Full: <span id="perFull">Loading...</span></div>
-    <div>Full: <span id="full">Loading...</span></div>
+    <img id="Telebrick" src="" alt="Telebrick" style="max-width: 100%; height: auto;">
     <div>Mixed: <span id="mixd">Loading...</span></div>
+    <div>Full: <span id="full">Loading...</span></div>
     <script>
         async function update() {
             try {
                 const response = await fetch('/latest');
                 const data = await response.json();
-                document.getElementById('dynamicImage').src = data.im_path;
-                document.getElementById('perFull').textContent = data.per_full;
+                document.getElementById('Telebrick').src = data.im_path;
+                // document.getElementById('perFull').textContent = data.per_full;
                 document.getElementById('full').textContent = data.full ? "Yes" : "No";
                 document.getElementById('mixd').textContent = data.mixd ? "Yes" : "No";
             } catch (error) {
