@@ -5,7 +5,7 @@ from datetime import datetime
 import requests
 
 PROJ = "test"
-PATH = "/home/pi/telebrick/rasp-pi"
+PATH = "/home/jack/telebrick/rasp-pi"
 URL = "http://10.0.0.185:80/"
 
 def cap_img(name):
@@ -30,9 +30,9 @@ def send_img(name):
             return False
     return True
 
-def is_full(url):
-    status = requests.get(url + "full")
-    return status.json()["full"]
+def latest(url):
+    status = requests.get(url + "latest")
+    return status.json()
 
 if __name__ == "__main__":
     for f in os.listdir(PATH):
@@ -42,10 +42,10 @@ if __name__ == "__main__":
 
     while True:
         rn = datetime.now()
-        im_name = rn.strftime("%Y%m%d%H%M") + PROJ + ".jpg"
+        im_name = rn.strftime("%Y%m%d%H%M%S") + PROJ + ".jpg"
         cap_img(im_name)
         send_img(im_name)
         os.remove(im_name)
-        print(is_full(URL))
+        print(latest(URL))
         time.sleep(5)
 

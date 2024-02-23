@@ -31,15 +31,10 @@ function Telebrick() {
   const [data, setData] = useState(null);
 
   // TODO: Replace with the correct server URL
-  const serverUrl = "http://localhost:8000";
+  const serverUrl = "http://localhost:80";
 
-  /*
-    The function inside useEffect will be called when the page first loads, and
-    every 30 seconds, to retrieve the latest data from the server
-  */
   useEffect(() => {
     const fetchData = async () => {
-      // Get the data from the backend
       try {
         const response = await fetch(`${serverUrl}/latest`, {
           mode: "cors", // Specify cors mode explicitly
@@ -54,7 +49,6 @@ function Telebrick() {
           setLoading(false);
         }
       } catch (error) {
-        // Display error message if there's been an error
         console.error("Error fetching data:", error);
         setLoading(true);
       }
@@ -62,38 +56,27 @@ function Telebrick() {
 
     fetchData();
 
-    // Set the interval to fetch the data every 30 seconds
     const MULTIPLIER = 1000;
     const intervalId = setInterval(fetchData, 30 * MULTIPLIER);
-    // Clear the interval for optimization
     return () => clearInterval(intervalId);
   }, []);
 
-  /*
-    Render loading page if the data is still being fetched, otherwise render the
-    information provided by the server
-  */
   return loading ? (
     <LoadingPage />
   ) : (
     <StyledWrapper>
       {/*
-        The server will return the path to the latest capture from the recipient in
-        the following format: images/202402052150.jpg; with the image being named by
-        the date and time it was taken. We concat the server URL with the path to the
-        image to display it in the Image component.
+        Update the path to use `im_name` for the image name.
+        Assume `im_name` contains the complete path to the image.
       */}
-      <Image path={`${data.image}`} />
+      <Image path={`/images/${data.im_name}`} />
       <InfoWrapper>
         {/*
-          The server will return an object with the following structure:
-            data: { light: boolean, full: boolean, image: string }
-          If data.light is true, we display "LIGHT ON", otherwise we display "LIGHT OFF".
-          If data.full is true, we display "FULL", otherwise we display "NOT FULL".
+          Update to use `per_full` to display the percentage of fullness,
+          `full` to indicate if it's full or not, and `mixd` to indicate if the content is mixed.
         */}
-        <Item>LIGHT {data.light ? "ON" : "OFF"}</Item>
-        <Item>{!data.full && "NOT "}FULL</Item>
-        {/* <Item>{data.percentage}% full</Item> */}
+        <Item>{data.mixd ? "MIXED CONTENTS" : "UNMIXED CONTENTS"}</Item>
+        <Item>{data.full ? "FULL" : `NOT FULL - ${data.per_full}% FULL`}</Item>
       </InfoWrapper>
     </StyledWrapper>
   );
