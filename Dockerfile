@@ -1,10 +1,3 @@
-FROM node:16 AS frontend
-WORKDIR /front
-COPY frontend/package*.json ./
-RUN npm install
-COPY frontend/ .
-CMD npm run start
-
 FROM python:3.9-slim AS backend
 WORKDIR /app
 RUN apt-get update && apt-get install -y \

@@ -4,4 +4,3 @@
 *.jpg
 __pycache__/
 ground.sh
-frontend/node_modules/
