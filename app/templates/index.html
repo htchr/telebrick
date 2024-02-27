@@ -1,34 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Telebrick</title>
-</head>
-<body>
-    <img id="Telebrick" src="" alt="Telebrick" style="max-width: 100%; height: auto;">
-    <div>Mixed: <span id="mixd">Loading...</span></div>
-    <div>Full: <span id="full">Loading...</span></div>
-    <script>
-        async function update() {
-            try {
-                const response = await fetch('/latest');
-                const data = await response.json();
-                document.getElementById('Telebrick').src = data.im_path;
-                // document.getElementById('perFull').textContent = data.per_full;
-                document.getElementById('full').textContent = data.full ? "Yes" : "No";
-                document.getElementById('mixd').textContent = data.mixd ? "Yes" : "No";
-            } catch (error) {
-                console.error('Error fetching new image:', error);
-            }
+    <style>
+      :root {
+        --dark: #232323;
+        --dark-gray: #363636;
+        --gray: #959595;
+        --white: #ffffff;
+      }
+
+      body {
+        background-color: var(--dark);
+        color: var(--white);
+        font-family: "Inter", sans-serif;
+        margin: 0;
+      }
+
+      .wrapper {
+        padding: 32px 12px;
+      }
+
+      h2 {
+        font-weight: 500;
+      }
+
+      .belt {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 40px;
+      }
+
+      button {
+        display: flex;
+        align-items: flex-end;
+        background-color: var(--dark);
+        color: var(--white);
+        border: 1px solid var(--white);
+        border-radius: 4px;
+        justify-content: center;
+        padding: 8px 12px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        color: var(--gray);
+        border: 1px solid var(--gray);
+        cursor: default;
+      }
+
+      button:disabled path {
+        fill: var(--gray);
+      }
+
+      .icon {
+        display: inline-block;
+        margin-right: 8px;
+        height: 16px;
+        width: 16px;
+      }
+
+      img {
+        border-radius: 8px;
+        height: auto;
+        max-width: 100%;
+      }
+
+      .list {
+        display: grid;
+        gap: 8px;
+        margin: 16px 0;
+      }
+
+      .card {
+        display: flex;
+        background-color: var(--dark-gray);
+        border-radius: 8px;
+        padding: 16px 8px;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: row;
+        gap: 12px;
+      }
+
+      .ornament {
+        border-radius: 50%;
+        display: inline-block;
+        background-color: var(--white);
+        padding: 10px 10px 6px 10px;
+      }
+
+      .ornament svg {
+        height: 20px;
+        width 20px;
+      }
+
+      span.key {
+        font-weight: 600;
+      }
+
+      @media only screen and (min-width: 599px) {
+        .list {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 24px;
         }
 
-        // Initial image update
-        update();
+        h2 {
+          margin-block-start: 0;
+        }
+      }
 
-        // Update the image every 5 seconds along with its analysis data
-        setInterval(update, 5000);
+      @media only screen and (min-width: 1535px) {
+        .wrapper {
+          display: grid;
+          grid-template-columns: repeat(1, 1fr 3fr);
+          gap: 24px;
+          padding: 40px;
+        }
+
+        h2 {
+          margin-block-start: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="content">
+        <h2>Dumpsters</h2>
+        <div class="belt">
+          <button>
+            <i class="icon">
+              <?xml version="1.0" encoding="UTF-8"?>
+              <svg
+                fill="none"
+                viewBox="0 0 16 16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m12.305 0.27562c0.1792 0.27874 0.0985 0.64997-0.1802 0.82916l-9.4816 6.0953h3.3571v-0.6c0-0.77319 0.6268-1.4 1.4-1.4h2.6v-0.6c0-0.77319 0.6268-1.4 1.4-1.4h2.4c0.7732 0 1.4 0.6268 1.4 1.4v2.6h0.2c0.3314 0 0.6 0.26863 0.6 0.6v5.6c0 1.4359-1.1641 2.6-2.6 2.6h-10.8c-1.4359 0-2.6-1.1641-2.6-2.6v-5.6c0-0.20416 0.10381-0.39431 0.27554-0.50471l11.2-7.2c0.2788-0.17919 0.65-0.098489 0.8292 0.18025zm1.6953 6.9244v-2.6c0-0.11045-0.0895-0.2-0.2-0.2h-2.4c-0.1105 0-0.2 0.08955-0.2 0.2v2.6h2.8zm-4 0v-0.8h-2.6c-0.11046 0-0.2 0.08955-0.2 0.2v0.6h2.8zm-8.8 1.2v5c0 0.7732 0.6268 1.4 1.4 1.4h10.8c0.7732 0 1.4-0.6268 1.4-1.4v-5h-13.6z"
+                  fill="#fff"
+                />
+              </svg>
+            </i>
+            <span>Dumpster 1</span>
+          </button>
+          <button disabled>
+            <i class="icon">
+              <?xml version="1.0" encoding="UTF-8"?>
+              <svg
+                fill="none"
+                viewBox="0 0 16 16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m12.305 0.27562c0.1792 0.27874 0.0985 0.64997-0.1802 0.82916l-9.4816 6.0953h3.3571v-0.6c0-0.77319 0.6268-1.4 1.4-1.4h2.6v-0.6c0-0.77319 0.6268-1.4 1.4-1.4h2.4c0.7732 0 1.4 0.6268 1.4 1.4v2.6h0.2c0.3314 0 0.6 0.26863 0.6 0.6v5.6c0 1.4359-1.1641 2.6-2.6 2.6h-10.8c-1.4359 0-2.6-1.1641-2.6-2.6v-5.6c0-0.20416 0.10381-0.39431 0.27554-0.50471l11.2-7.2c0.2788-0.17919 0.65-0.098489 0.8292 0.18025zm1.6953 6.9244v-2.6c0-0.11045-0.0895-0.2-0.2-0.2h-2.4c-0.1105 0-0.2 0.08955-0.2 0.2v2.6h2.8zm-4 0v-0.8h-2.6c-0.11046 0-0.2 0.08955-0.2 0.2v0.6h2.8zm-8.8 1.2v5c0 0.7732 0.6268 1.4 1.4 1.4h10.8c0.7732 0 1.4-0.6268 1.4-1.4v-5h-13.6z"
+                  fill="#fff"
+                />
+              </svg>
+            </i>
+            <span>Dumpster 2</span>
+          </button>
+          <button disabled>
+            <i class="icon">
+              <?xml version="1.0" encoding="UTF-8"?>
+              <svg
+                fill="none"
+                viewBox="0 0 16 16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m12.305 0.27562c0.1792 0.27874 0.0985 0.64997-0.1802 0.82916l-9.4816 6.0953h3.3571v-0.6c0-0.77319 0.6268-1.4 1.4-1.4h2.6v-0.6c0-0.77319 0.6268-1.4 1.4-1.4h2.4c0.7732 0 1.4 0.6268 1.4 1.4v2.6h0.2c0.3314 0 0.6 0.26863 0.6 0.6v5.6c0 1.4359-1.1641 2.6-2.6 2.6h-10.8c-1.4359 0-2.6-1.1641-2.6-2.6v-5.6c0-0.20416 0.10381-0.39431 0.27554-0.50471l11.2-7.2c0.2788-0.17919 0.65-0.098489 0.8292 0.18025zm1.6953 6.9244v-2.6c0-0.11045-0.0895-0.2-0.2-0.2h-2.4c-0.1105 0-0.2 0.08955-0.2 0.2v2.6h2.8zm-4 0v-0.8h-2.6c-0.11046 0-0.2 0.08955-0.2 0.2v0.6h2.8zm-8.8 1.2v5c0 0.7732 0.6268 1.4 1.4 1.4h10.8c0.7732 0 1.4-0.6268 1.4-1.4v-5h-13.6z"
+                  fill="#fff"
+                />
+              </svg>
+            </i>
+            <span>Dumpster 3</span>
+          </button>
+        </div>
+
+        <h2>Dumpster 1</h2>
+        <div class="list">
+          <div class="card">
+            <div class="ornament">
+              <?xml version="1.0" encoding="UTF-8"?>
+              <svg
+                fill="none"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m6.2071 2c0.05493 0 0.10761 0.02182 0.14645 0.06066l1.9393 1.9393h-2.2929v-1.7929c0-0.11439 0.09273-0.20711 0.20711-0.20711zm-1.2071 0.20711v1.7929h-1.001c-0.1426 0-0.27841 0.06088-0.37328 0.16733-0.09487 0.10646-0.13978 0.24835-0.12343 0.39l1.3472 11.672c0.11648 1.0092 0.97097 1.7707 1.9868 1.7707h6.3262c1.0159 0 1.8704-0.7616 1.9868-1.7708l1.3463-11.672c0.0164-0.14164-0.0285-0.28353-0.1234-0.38997s-0.2307-0.16732-0.3733-0.16732h-0.999v-1.5c0-0.82843-0.6716-1.5-1.5-1.5h-3c-0.82842 0-1.5 0.67157-1.5 1.5v0.79289l-1.9393-1.9393c-0.22637-0.22637-0.53341-0.35355-0.85355-0.35355-0.66667 0-1.2071 0.54044-1.2071 1.2071zm5 1.7929v-1.5c0-0.27614 0.2239-0.5 0.5-0.5h3c0.2761 0 0.5 0.22386 0.5 0.5v1.5h-4zm-5.4399 1h10.878l-1.282 11.115c-0.0582 0.5046-0.4854 0.8854-0.9934 0.8854h-6.3262c-0.50792 0-0.93516-0.3808-0.9934-0.8853l-1.2829-11.115zm6.7389 2.75c-0.5774-1-2.0208-1-2.5981 0l-0.45159 0.78218c-0.14396 0.24934-0.04812 0.56845 0.2094 0.69721 0.23659 0.11829 0.52437 0.03186 0.65662-0.19721l0.4516-0.78218c0.19244-0.33333 0.67359-0.33333 0.86599 0l0.4516 0.78218c0.1323 0.22907 0.4201 0.3155 0.6566 0.19721 0.2576-0.12876 0.3534-0.44787 0.2094-0.69721l-0.4515-0.78218zm0.866 3.5-0.1076-0.1863c-0.1439-0.2493-0.0481-0.5684 0.2095-0.6972 0.2365-0.1183 0.5243-0.0318 0.6566 0.1972l0.1075 0.1863c0.5774 1-0.1443 2.25-1.299 2.25h-0.7321c-0.2761 0-0.5-0.2239-0.5-0.5s0.2239-0.5 0.5-0.5h0.7321c0.3849 0 0.6254-0.4167 0.433-0.75zm-3.1651 0.75c0.27614 0 0.5 0.2239 0.5 0.5s-0.22386 0.5-0.5 0.5h-0.73206c-1.1547 0-1.8764-1.25-1.299-2.25l0.10753-0.1863c0.13226-0.229 0.42004-0.3155 0.65662-0.1972 0.25753 0.1288 0.35337 0.4479 0.20941 0.6972l-0.10754 0.1863c-0.19245 0.3333 0.04812 0.75 0.43301 0.75h0.73206z"
+                  fill="#363636"
+                />
+              </svg>
+            </div>
+            <div class="card-content">
+              <span class="key">Mixed: </span>
+              <span id="mixd">Loading...</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="ornament">
+              <?xml version="1.0" encoding="UTF-8"?>
+              <svg
+                fill="none"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m5 3.0001c-1.1046 0-2 0.89543-2 2v10c0 1.1046 0.89543 2 2 2h10c1.1046 0 2-0.8954 2-2v-10c0-1.1046-0.8954-2-2-2h-10zm11 9.9202c-0.8346-0.1436-1.4226-0.4694-1.862-0.8795-0.6136-0.5728-0.9871-1.3548-1.2921-2.2089-0.1045-0.29246-0.1964-0.5793-0.2884-0.86659-0.0433-0.13518-0.0866-0.27046-0.1313-0.40647-0.1357-0.41305-0.2818-0.82555-0.4634-1.1886-0.1814-0.36292-0.4135-0.70819-0.7383-0.96284-0.3357-0.26316-0.7422-0.4073-1.2245-0.4073-0.48232 0-0.88885 0.14414-1.2245 0.4073-0.32482 0.25465-0.55687 0.59992-0.73833 0.96284-0.18154 0.36308-0.32763 0.77558-0.46335 1.1886-0.04469 0.13601-0.08802 0.27129-0.13132 0.40647-0.09203 0.2873-0.18391 0.57413-0.28836 0.86659-0.30504 0.85414-0.67855 1.6361-1.2922 2.2089-0.4394 0.4101-1.0274 0.7359-1.862 0.8795v-7.9202c0-0.55228 0.44772-1 1-1h10c0.5523 0 1 0.44772 1 1v7.9202zm-12 1.0121c1.0918-0.156 1.9147-0.5729 2.5443-1.1606 0.79264-0.7398 1.2316-1.7077 1.5516-2.6036 0.11005-0.30813 0.21065-0.6221 0.30524-0.91731 0.042-0.13106 0.08281-0.25842 0.12273-0.37994 0.13382-0.40726 0.26116-0.76039 0.40775-1.0536 0.14666-0.29333 0.29743-0.49494 0.46089-0.62309 0.15262-0.11965 0.33984-0.19427 0.60752-0.19427 0.2677 0 0.4549 0.07462 0.6075 0.19427 0.1635 0.12815 0.3142 0.32976 0.4609 0.62309 0.1466 0.29317 0.2739 0.6463 0.4078 1.0536 0.0399 0.12152 0.0807 0.2489 0.1227 0.37996 0.0946 0.2952 0.1952 0.60916 0.3052 0.91729 0.32 0.8959 0.759 1.8638 1.5516 2.6036 0.6296 0.5876 1.4525 1.0046 2.5443 1.1606v1.0677c0 0.5523-0.4477 1-1 1h-10c-0.55228 0-1-0.4477-1-1v-1.0677z"
+                  fill="#363636"
+                />
+              </svg>
+            </div>
+            <div class="card-content">
+              <span class="key">Full: </span>
+              <span id="full">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="media">
+        <img
+          id="image"
+          src="images/loading.jpeg"
+          alt="Latest dumpster capture"
+        />
+      </div>
+    </div>
+
+    <script>
+      async function update() {
+        try {
+          const response = await fetch("/latest");
+          const data = await response.json();
+          document.getElementById("image").src = data.im_path;
+          // document.getElementById('perFull').textContent = data.per_full;
+          document.getElementById("full").textContent = data.full
+            ? "Yes"
+            : "No";
+          document.getElementById("mixd").textContent = data.mixd
+            ? "Yes"
+            : "No";
+        } catch (error) {
+          console.error("Error fetching new image:", error);
+        }
+      }
+
+      // Initial image update
+      update();
+
+      // Update the image every 5 seconds along with its analysis data
+      setInterval(update, 5000);
     </script>
-</body>
+  </body>
 </html>
-
