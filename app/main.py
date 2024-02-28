@@ -13,13 +13,19 @@ import os
 
 app = FastAPI()
 app.mount("/images", StaticFiles(directory="images"), name="images")
-
 templates = Jinja2Templates(directory="templates")
 
 NEW_NAME = ""
 PER_FULL = -1
 FULL = False
 MIXD = False
+
+
+def remove_old_images(path, excpt):
+    for f in os.listdir(path):
+        if f.endswith(".jpg") and excpt not in f:
+            f_path = os.path.join(path, f)
+            os.remove(f_path)
 
 
 def largest_aruco_id(im_path):
@@ -54,9 +60,10 @@ async def upload_img(file: UploadFile = File(...)):
     with open(im_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     NEW_NAME = file.filename
-    PER_FULL = largest_aruco_id(im_path)
-    FULL = ground(im_path, "hand", "Is there a hand?")
-    # MIXD = ground(im_path, "mixed_waste1", "Is concrete the only thing in the bin?")
+    # PER_FULL = largest_aruco_id(im_path)
+    FULL = ground(im_path, "bin_full1", "Is the trash container full?")
+    MIXD = not ground(im_path, "mixed_waste1", "Is concrete the only thing in the bin?")
+    remove_old_images(path, NEW_NAME)
     return {}
 
 
