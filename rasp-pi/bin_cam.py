@@ -4,9 +4,11 @@ import os
 from datetime import datetime
 import requests
 
+
 PROJ = "test"
-PATH = "/home/jack/telebrick/rasp-pi"
-URL = "http://10.0.0.185:80/"
+PATH = "/home/pi/telebrick/rasp-pi"
+URL = "http://10.18.234.36:80/"
+
 
 def cap_img(name):
     cap = cv2.VideoCapture(0)
@@ -20,6 +22,7 @@ def cap_img(name):
     cap.release()
     return True
 
+
 def send_img(name):
     with open(name, 'rb') as jpg:
         files = {"file": jpg}
@@ -30,9 +33,11 @@ def send_img(name):
             return False
     return True
 
+
 def latest(url):
     status = requests.get(url + "latest")
     return status.json()
+
 
 if __name__ == "__main__":
     for f in os.listdir(PATH):
@@ -47,5 +52,5 @@ if __name__ == "__main__":
         send_img(im_name)
         os.remove(im_name)
         print(latest(URL))
-        time.sleep(5)
+        time.sleep(1)
 
